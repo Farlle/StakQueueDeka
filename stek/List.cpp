@@ -1,3 +1,4 @@
+//#include "stdafx.h"
 #include<iostream>;
 
 template<typename T>
@@ -44,12 +45,14 @@ public: void push(T elem)
 		head->inf = elem;
 		CurrentSize++;
 	}
-	void pop()
+	T pop()
 	{
 		node<T>* tmp = head;
+		T key = head->inf;
 		head = head->link;
 		delete tmp;
 		CurrentSize--;
+		return key;
 	}
 	void clear() 
 	{
@@ -59,7 +62,7 @@ public: void push(T elem)
 			head = head->link;
 			delete tmp;
 		}
-	//	CurrentSize = 0;
+		CurrentSize = 0;
 	}
 };
 
@@ -77,7 +80,8 @@ public:
 	node<T> *head = nullptr;
 	node<T> *tail = nullptr;
 	node<T> *current = head;
-	//int CurrentSize = 0;
+	node<T> *circleElem = nullptr;
+	int CurrentSize = 0;
 	bool isEmpty()
 	{
 		if (head == nullptr)
@@ -121,20 +125,35 @@ public:
 			tail = tmp;
 			
 		}
-		//CurrentSize++;
+		CurrentSize++;
 	}
 
-	/*void creatCircleQueue(T elem)
+	void creatCircleQueue(T elem)
 	{
-		head->inf = elem;
-	}*/
+
+		if (circleElem == nullptr)
+		{
+			circleElem = head;
+			circleElem->inf = elem;
+			circleElem = circleElem->link;
+		}
+		else
+		{
+			circleElem->inf = elem;
+			circleElem = circleElem->link;
+		}
+	}
 	
-	void pop() 
+	T pop() 
 	{
 		node<T>* tmp = head;
+		T key = head->inf;
 		head = head->link;
 		delete tmp;
-		//CurrentSize--;
+		CurrentSize--;
+		return key;
+
+		
 	}
 	void clear()
 	{
@@ -150,7 +169,7 @@ public:
 
 		tail = nullptr;
 		head = nullptr;
-		//CurrentSize = 0;
+		CurrentSize = 0;
 	}
 };
 
@@ -171,6 +190,11 @@ public:
 	node<T>* head = nullptr;
 	node<T>* tail = nullptr;
 	node<T> *current = head;
+	node<T> *circleElem = nullptr;
+	node<T> *circleElemTail = nullptr;
+	int CurrentSize = 0;
+	//void clearAll();
+
 	bool isEmpty()
 	{
 		if (head == nullptr)
@@ -214,6 +238,8 @@ public:
 			tail = tmp;
 		}
 		tail->inf = elem;
+		CurrentSize++;
+
 	}
 
 	void pushTail(T elem) {
@@ -234,23 +260,75 @@ public:
 			head = tmp;
 		}
 		head->inf = elem;
-		
+		CurrentSize++;
+
 	}
 
-	void popHead()
+	T popHead()
 	{
+		
 		node<T>* tmp = head;
+		T key = head->inf;
 		head = head->link;
 		delete tmp;
+		CurrentSize--;
+		return key;
+
+
 	}
-	void popTail() {
-		node<T>* tmp = tail;
-		tail = tail->linkPrev;
-		tail->link = nullptr;
-		delete tmp;
+	T popTail() {
+		T key;
+		if (CurrentSize == 1)
+		{
+			node<T>* tmp = tail;
+			 key = tail->inf;
+			 clearAll();
+			//tail = tail->linkPrev;
+		/*	tail->link = nullptr;
+			CurrentSize--;
+
+			free(tmp);
+			tail->link = nullptr;*/
+			//head->link = nullptr;
+		}
+		else
+		{
+			node<T>* tmp = tail;
+			 key = tail->inf;
+			tail = tail->linkPrev;
+			tail->link = nullptr;
+			head->link = nullptr;
+			CurrentSize--;
+
+			delete tmp;
+		}
+		
+		return key;
+
 	}
 
-	void clear()
+	void creatCircleDeka(T elem)
+	{
+
+		if (circleElem == nullptr)
+		{
+			circleElem = head;
+			circleElem->inf = elem;
+			circleElem = circleElem->linkPrev;
+		}
+		else
+		{
+			circleElem->inf = elem;
+			circleElem = circleElem->linkPrev;
+		}
+	}
+
+	void creatCircleDekaTail(T elem)
+	{
+		tail->inf = elem;
+	}
+
+	void clearAll()
 	{
 		while (head != nullptr)
 		{
@@ -262,6 +340,13 @@ public:
 			}
 		}
 		tail = nullptr;
+		/*while (CurrentSize = !0)
+		{
+			popTail();
+		}*/
+	
+		CurrentSize = 0;
+
 	}
 
 };
